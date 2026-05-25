@@ -1,0 +1,65 @@
+Sub SortSheetsFast()
+   Dim i As Long
+   Dim j As Long
+   Dim tempIndex As Long
+   Dim tempName As String
+   Dim names() As String
+   Dim sheetCount As Long
+   Dim ws As Worksheet
+   
+   ' 获取工作表数量
+   sheetCount = ActiveWorkbook.Sheets.Count
+   ReDim names(1 To sheetCount)
+   
+   ' 收集所有工作表的名称，并去除前后空格
+   For i = 1 To sheetCount
+       names(i) = Trim(ActiveWorkbook.Sheets(i).Name)
+   Next i
+   
+   ' 使用快速排序算法对工作表名称进行排序
+   QuickSort names, 1, sheetCount
+   
+   ' 根据排序后的名称重新排列工作表
+   For i = 1 To sheetCount
+       For j = 1 To sheetCount
+           ' 比较时也去除前后空格
+           If names(i) = Trim(ActiveWorkbook.Sheets(j).Name) Then
+               If i <> j Then
+                   Set ws = ActiveWorkbook.Sheets(j)
+                   ws.Move After:=ActiveWorkbook.Sheets(sheetCount)
+                   Exit For
+               End If
+           End If
+       Next j
+   Next i
+   
+   ' 激活第一个工作表
+   ActiveWorkbook.Sheets(1).Activate
+End Sub
+
+'QuickSort 子程序（无需修改）
+Sub QuickSort(arr() As String, first As Long, last As Long)
+   Dim pivot As String, temp As String
+   Dim i As Long, j As Long, k As Long
+   If first >= last Then Exit Sub
+   pivot = arr((first + last) \ 2)
+   i = first
+   j = last
+   While i <= j
+       While arr(i) < pivot And i < last
+           i = i + 1
+       Wend
+       While arr(j) > pivot And j > first
+           j = j - 1
+       Wend
+       If i <= j Then
+           temp = arr(i)
+           arr(i) = arr(j)
+           arr(j) = temp
+           i = i + 1
+           j = j - 1
+       End If
+   Wend
+   QuickSort arr, first, j
+   QuickSort arr, i, last
+End Sub

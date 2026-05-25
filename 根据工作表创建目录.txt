@@ -1,0 +1,35 @@
+Sub CreateTOCWithHyperlinks()
+   Dim ws As Worksheet
+   Dim tocSheet As Worksheet
+   Dim sheetIndex As Integer
+   Dim i As Integer
+   
+   ' 检查是否存在名为"目录"的工作表，如果存在则删除
+   For Each ws In ThisWorkbook.Worksheets
+       If ws.Name = "目录" Then
+           Application.DisplayAlerts = False
+           ws.Delete
+           Application.DisplayAlerts = True
+           Exit For
+       End If
+   Next ws
+   
+   ' 在序号1的工作表前插入新的"目录"工作表
+   Set tocSheet = ThisWorkbook.Worksheets.Add(Before:=ThisWorkbook.Worksheets(1))
+   tocSheet.Name = "目录"
+   
+   ' 在"目录"工作表的A1单元格设置标题
+   tocSheet.Range("A1").Value = "工作表目录"
+   
+   ' 遍历所有工作表，将工作表名称添加到"目录"工作表的A列，并创建超链接
+   sheetIndex = 2 ' 从A2开始填充，A1为标题
+   For Each ws In ThisWorkbook.Worksheets
+       If ws.Name <> "目录" Then
+           tocSheet.Hyperlinks.Add Anchor:=tocSheet.Cells(sheetIndex, 1), Address:="", SubAddress:="'" & ws.Name & "'!A1", TextToDisplay:=ws.Name
+           sheetIndex = sheetIndex + 1
+       End If
+   Next ws
+   
+   ' 自动调整A列宽度以适应内容
+   tocSheet.Columns("A").AutoFit
+End Sub

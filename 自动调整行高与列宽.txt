@@ -1,0 +1,13 @@
+Sub AutoFitRowsAndColumns()
+ 
+ Dim ws As Worksheet
+ 
+ ' 遍历所有工作表
+ For Each ws In ThisWorkbook.Sheets
+     ' 自动调整行高
+     ws.Rows.AutoFit
+     ' 自动调整列宽
+     ws.Columns.AutoFit
+ Next ws
+ 
+End Sub

@@ -1,0 +1,19 @@
+Sub AddSheetNameToFirstRow()
+   Dim ws As Worksheet
+   Dim lastRow As Long
+   
+   ' 遍历所有工作表
+   For Each ws In ThisWorkbook.Worksheets
+       ' 清除第一行的内容（如果有的话）
+       lastRow = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
+       If lastRow > 1 Then
+           ws.Range("A1:" & ws.Cells(1, lastRow).Address).ClearContents
+       End If
+       
+       ' 将工作表的名字放入第一行
+       ws.Cells(1, 1).Value = ws.Name
+   Next ws
+   
+   ' 提示完成
+   MsgBox "Sheet names have been added to the first row of each sheet."
+End Sub

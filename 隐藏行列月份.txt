@@ -1,0 +1,23 @@
+Sub HideRowsWithSeptemberDates()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim dateValue As Date
+    
+    ' 遍历所有工作表
+    For Each ws In ThisWorkbook.Worksheets
+        ' 找到当前工作表的最后一行
+        lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+        
+        ' 遍历每一行，检查A列中的日期是否为9月
+        For i = 1 To lastRow
+            If IsDate(ws.Cells(i, 1).Value) Then
+                dateValue = ws.Cells(i, 1).Value
+                ' 如果日期是9月，则隐藏该行
+                If Month(dateValue) = 9 Then
+                    ws.Rows(i).Hidden = True
+                End If
+            End If
+        Next i
+    Next ws
+End Sub
